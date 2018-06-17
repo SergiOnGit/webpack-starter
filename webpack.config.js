@@ -1,8 +1,9 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
-const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
 	entry: {
@@ -14,7 +15,11 @@ module.exports = {
             new UglifyJsPlugin({
                 cache: true,
                 parallel: true,
-                sourceMap: true
+                uglifyOptions: {
+                    output: {
+                        comments: false
+                    }
+                }
             }),
             new OptimizeCSSAssetsPlugin({})
         ]
@@ -23,13 +28,17 @@ module.exports = {
         new CleanWebpackPlugin(['dist']),
         new webpack.ProvidePlugin({
 			'$': 'jquery',
-			jQuery: 'jquery',
 			Popper: ['popper.js', 'default'],
-			'Util': "exports-loader?Util!bootstrap/js/dist/util"
-		})
+			'Util': 'exports-loader?Util!bootstrap/js/dist/util'
+        }),
+        new CopyWebpackPlugin([
+            {
+                from: './src/images', to: './images'
+            }
+        ])
     ],
 	output: {
-		filename: 'app.bundle.js',
+		filename: './js/app.bundle.js',
 		path: path.resolve(__dirname, 'dist')
 	},
    	module: {
@@ -41,7 +50,7 @@ module.exports = {
                         loader: 'file-loader',
                         options: {
                             name: 'app.bundle.css',
-                            outputPath: 'css/'
+                            outputPath: './css/'
                         }
                     }, {
                         loader: 'extract-loader',
@@ -70,7 +79,7 @@ module.exports = {
 	           		loader: 'file-loader',
                     options: {
                         name: '[name].[ext]',
-                        outputPath: 'images/'
+                        outputPath: './images/'
                     }
 	         	}]
 	       	},
@@ -80,7 +89,7 @@ module.exports = {
                     loader: 'file-loader',
                     options: {
                         name: '[name].[ext]',
-                        outputPath: 'fonts/'
+                        outputPath: './fonts/'
                     }
                 }]
             }

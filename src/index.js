@@ -1,6 +1,5 @@
-// CSS
-import './scss/app.scss';
+/* IMPORT CSS */
+import './scss/dependencies.scss';
 
-// JAVASCRIPT
-import main from './js/app.js';
-main();
+/* IMPORT JS */
+import './js/dependencies.js';
